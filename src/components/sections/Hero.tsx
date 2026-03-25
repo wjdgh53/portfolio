@@ -27,7 +27,7 @@ export function Hero() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col items-start"
+          className="flex flex-col items-center lg:items-start text-center lg:text-left"
         >
           {/* Status badge */}
           {personal.available && (
@@ -54,7 +54,7 @@ export function Hero() {
           </motion.h1>
 
           {/* Title + Location */}
-          <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-4 mb-6">
+          <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-6">
             <span className="text-xl md:text-2xl font-semibold text-text-main">{personal.title}</span>
             <span className="h-5 w-[1px] bg-black/15 hidden sm:block" />
             <span className="flex items-center gap-1.5 text-muted text-sm">
@@ -69,7 +69,7 @@ export function Hero() {
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
+          <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
             <a
               href="#projects"
               className="px-7 py-3.5 rounded-2xl bg-accent text-white font-semibold hover:bg-accent/90 active:scale-[0.98] transition-all flex items-center gap-2 group shadow-md shadow-accent/20"
@@ -88,7 +88,7 @@ export function Hero() {
           </motion.div>
 
           {/* Quick stats */}
-          <motion.div variants={itemVariants} className="mt-12 flex gap-8 border-t border-black/6 pt-8">
+          <motion.div variants={itemVariants} className="mt-12 flex gap-8 border-t border-black/6 pt-8 justify-center lg:justify-start w-full">
             <div>
               <p className="text-3xl font-bold tracking-tighter text-text-main">7+</p>
               <p className="text-xs text-muted mt-0.5 uppercase tracking-wider">Years Exp.</p>
@@ -116,7 +116,7 @@ export function Hero() {
           {/* Green accent block behind photo */}
           <div className="absolute top-6 right-0 w-[88%] h-[92%] bg-accent/8 rounded-3xl -z-10" />
 
-          <div className="relative w-full max-w-md aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 ring-1 ring-black/8 ring-inset">
+          <div className="relative w-full max-w-[280px] sm:max-w-sm lg:max-w-md aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-black/10 ring-1 ring-black/8 ring-inset">
             <img
               src="/images/dennis-profile.jpg"
               alt="Jeongho Noh"

@@ -1,30 +1,87 @@
-import { Github, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { FadeUp } from '../ui/FadeUp';
 import { projectsData, type Project } from '../../data/projects';
 
+function ImageSlider({ images, title }: { images: string[]; title: string }) {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState(1);
+
+  function go(next: number) {
+    setDir(next > idx ? 1 : -1);
+    setIdx(next);
+  }
+
+  return (
+    <div className="relative w-full h-full bg-white">
+      <AnimatePresence mode="wait" custom={dir}>
+        <motion.img
+          key={idx}
+          src={images[idx]}
+          alt={`${title} ${idx + 1}`}
+          custom={dir}
+          initial={{ opacity: 0, x: dir * 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: dir * -40 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full h-full object-contain"
+        />
+      </AnimatePresence>
+
+      {/* Prev / Next */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={() => go((idx - 1 + images.length) % images.length)}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 text-white flex items-center justify-center hover:bg-black/50 transition-colors z-10"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => go((idx + 1) % images.length)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 text-white flex items-center justify-center hover:bg-black/50 transition-colors z-10"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          {/* Dots */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => go(i)}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === idx ? 'bg-white w-4' : 'bg-white/50'}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const isEven = index % 2 === 0;
+  const allImages = project.images ?? (project.image ? [project.image] : null);
+  const isMobileApp = !!project.images;
 
   return (
     <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-16 items-center`}>
       {/* Image */}
       <div className="w-full lg:w-1/2">
         <FadeUp>
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-black/5 group border border-black/5">
-            {project.image ? (
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-              />
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-black/5 border border-black/5 bg-white">
+            {allImages ? (
+              allImages.length > 1 ? (
+                <ImageSlider images={allImages} title={project.title} />
+              ) : (
+                <img src={allImages[0]} alt={project.title} className="w-full h-full object-contain" />
+              )
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-accent/10 to-accent-secondary/10 flex items-center justify-center">
-                <span className="text-8xl opacity-20 font-bold font-serif italic text-accent">
-                  {project.title[0]}
-                </span>
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="text-8xl opacity-20 font-bold font-serif italic text-accent">{project.title[0]}</span>
               </div>
             )}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
           </div>
         </FadeUp>
       </div>
